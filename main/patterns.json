@@ -1,0 +1,7 @@
+{
+  "ExecuteLua": {
+    "pattern": "48 89 5C 24 ? 57 48 83 EC 20",
+    "mask": "xxxx?xxxxx",
+    "xorKey": 0
+  }
+}
