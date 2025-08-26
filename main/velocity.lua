@@ -1,23 +1,46 @@
--- Script Lua: FastRun básico
+-- Script Lua: SpeedHack GUI
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
-local UserInputService = game:GetService("UserInputService")
 
-local runSpeed = 100 -- velocidade do humanoid (padrão é 16)
-humanoid.WalkSpeed = runSpeed
+-- Estado
+local speedActive = false
+local normalSpeed = humanoid.WalkSpeed
+local boostedSpeed = 100 -- 100x mais rápido (ajuste se quiser)
 
-UserInputService.InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-    if input.KeyCode == Enum.KeyCode.R then -- pressione R para ativar
-        humanoid.WalkSpeed = runSpeed
-        print("Fast Run ativado!")
-    end
-end)
+-- Criar GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "SpeedHackGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
 
-UserInputService.InputEnded:Connect(function(input, gameProcessed)
-    if input.KeyCode == Enum.KeyCode.R then
-        humanoid.WalkSpeed = 16 -- volta ao normal
-        print("Fast Run desativado!")
+-- Painel
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 200, 0, 100)
+frame.Position = UDim2.new(0.8, 0, 0.05, 0)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Parent = screenGui
+
+-- Botão
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 180, 0, 50)
+button.Position = UDim2.new(0, 10, 0, 25)
+button.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+button.TextColor3 = Color3.fromRGB(255, 255, 255)
+button.Font = Enum.Font.SourceSansBold
+button.TextSize = 20
+button.Text = "Ativar Speed Hack"
+button.Parent = frame
+
+-- Função botão
+button.MouseButton1Click:Connect(function()
+    speedActive = not speedActive
+    if speedActive then
+        humanoid.WalkSpeed = boostedSpeed
+        button.Text = "Desativar Speed Hack"
+    else
+        humanoid.WalkSpeed = normalSpeed
+        button.Text = "Ativar Speed Hack"
     end
 end)
